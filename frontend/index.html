@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dental AI — druhý pohľad na RTG</title>
+    <!--
+      Anti-FOUC: v dev móde Vite injectuje CSS až cez JS, takže prvých ~50 ms
+      má prehliadač predvolené biele pozadie, čierny text a Times New Roman.
+      Tieto hodnoty sú presne tie isté, aké nastavuje index.css (slate-950 /
+      slate-100 z Tailwind tokenov), takže pri plynulom prechode nie je
+      žiadny farebný ani typografický skok.
+    -->
+    <style>
+      html,
+      body {
+        background: oklch(12.9% 0.042 264.695); /* slate-950 */
+        color: oklch(96.8% 0.007 247.896); /* slate-100 */
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

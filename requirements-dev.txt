@@ -1,0 +1,5 @@
+# Dev/test závislosti — pip install -r requirements-dev.txt
+# (produkcii stačí backend/requirements.txt)
+pytest>=8.0
+httpx>=0.27
+requests>=2.31

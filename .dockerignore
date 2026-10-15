@@ -1,0 +1,31 @@
+# Kontext buildu: NIKDY nebalíme venv, dáta s pacientmi, logy ani gite
+.venv/
+**/.venv/
+**/__pycache__/
+*.py[cod]
+backend/data/
+backend/tmp/
+data/
+*.log
+runs/
+.pytest_cache/
+
+# Veľké tréningové priečinky (do image patria len backend + frontend/dist)
+kernel_output*/
+kernel_source/
+kernel_update/
+train/
+local_training/
+kaggle/
+demo/
+docs/
+*.ipynb
+
+# Git a env
+.git/
+.gitignore
+.env
+.env.local
+
+# Node (do image ide len hotový build frontend/dist)
+node_modules/

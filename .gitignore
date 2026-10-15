@@ -1,0 +1,79 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Váhy a dáta (veľké binárky mimo gitu)
+backend/weights/*.pt
+*.onnx
+
+# Env
+.env
+.env.local
+
+# Node
+node_modules/
+frontend/dist/
+
+# Scripts
+scripts/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logy a výstupy
+*.log
+runs/
+
+# Pacientske dáta a runtime artefakty (NIKDY do gitu)
+backend/data/
+backend/tmp/
+data/
+.pytest_cache/
+kernel_output*/
+kernel_source/
+kernel_update/
+
+# Trening artefakty a datasety (gigabajty — mimo gitu)
+train/runs/
+train/archive/
+archive/
+kaggle_merged/
+kaggle-p0/
+
+# Junk z neznameho procesu (poznamka 11.10.: vytvara sa za behu — preskumat)
+hello.py
+process_queue.py
+server.py
+task_queue.json
+task_results.json
+test_post.py
+
+# Lokalne zalohy (nie do gitu)
+_zalohy/
+*.bak-*
+*.bak
+# Velke binarky (datasets a vahy, ~4 GB) - NIKDY do gitu ani na GitHub
+*.zip
+*.pt
+*.pth
+*.onnx
+*.safetensors
+kaggle/night/
+local_training/
+
+# Pacientske data a sukromne fotografie zubov - NIKDY do gitu
+demo/pripady/
+
+# Docasne skripty a junk subory
+evaluate_tta*.py
+download_kernel*.py
+convert_dentex.py
+create_notebook.py
+wait_for_kernel*.ps1
+kernel_update/
+kernel_source/

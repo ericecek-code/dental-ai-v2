@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dental AI v2 — DEMO: finálna vízia rozhrania</title>
+<style>
+  *{box-sizing:border-box;margin:0}
+  body{font-family:system-ui,Segoe UI,sans-serif;background:#020617;color:#e2e8f0;min-height:100vh}
+  .glass{background:rgba(15,23,42,.72);backdrop-filter:blur(14px);border:1px solid rgba(30,41,59,.8)}
+  header{display:flex;align-items:center;gap:12px;padding:14px 24px;border-bottom:1px solid #1e293b}
+  .logo{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#14b8a6,#0284c7);display:flex;align-items:center;justify-content:center;font-size:20px}
+  header h1{font-size:16px;font-weight:600}
+  header .sub{font-size:11px;color:#64748b}
+  .user{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:#94a3b8}
+  .user .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#14b8a6,#0284c7);display:flex;align-items:center;justify-content:center;color:#04121a;font-weight:700}
+  main{max-width:1400px;margin:0 auto;padding:20px 24px;display:grid;grid-template-columns:1fr 380px;gap:20px}
+  .xray-wrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid #1e293b;background:#000}
+  svg.xray{display:block;width:100%;height:auto}
+  .bbox{position:absolute;border-radius:12px;border:3px solid;box-shadow:0 0 14px}
+  .bbox .fill{position:absolute;inset:0;border-radius:9px;opacity:.28}
+  .pill{position:absolute;top:-34px;left:8px;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;color:#04121a;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+  .toolbar{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  .chip{font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid #334155;background:#0f172a;color:#94a3b8}
+  .chip.on{border-color:#e879f9aa;color:#f0abfc;background:rgba(232,121,249,.08)}
+  .chip.grad{border-color:#fb923caa;color:#fdba74;background:rgba(251,146,60,.08)}
+  .actionbar{display:flex;align-items:center;gap:14px;margin-top:12px;padding:14px 18px;border-radius:14px;background:rgba(15,23,42,.7);border:1px solid #1e293b}
+  .actionbar .who{font-size:14px;color:#cbd5e1}
+  .actionbar .who b{color:#f1f5f9}
+  .btn{font-size:14px;font-weight:600;padding:9px 18px;border-radius:10px;border:0;cursor:pointer}
+  .btn.ok{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.4)}
+  .btn.fix{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.4)}
+  .hint{margin-left:auto;font-size:11px;color:#475569}
+  aside h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:12px}
+  .card{border-radius:14px;padding:14px 16px;margin-bottom:12px;background:rgba(15,23,42,.72);border:1px solid #1e293b}
+  .card.active{border-color:rgba(45,212,191,.6);box-shadow:0 0 20px rgba(45,212,191,.15)}
+  .card .top{display:flex;justify-content:space-between;align-items:start}
+  .card .name{font-weight:600}
+  .card .en{font-size:11px;color:#64748b}
+  .sev{font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600}
+  .sev.urgent{background:rgba(239,68,68,.12);color:#fca5a5}
+  .sev.watch{background:rgba(56,189,248,.12);color:#7dd3fc}
+  .sev.rest{background:rgba(167,139,250,.12);color:#c4b5fd}
+  .bar{height:8px;border-radius:999px;background:#1e293b;margin:10px 0;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#2dd4bf,#0ea5e9)}
+  .pct{font-size:12px;color:#94a3b8;font-family:ui-monospace,monospace}
+  .btns{display:flex;gap:8px;margin-top:4px}
+  .btn.sm{font-size:12px;padding:6px 12px}
+  .stats{margin-top:auto;font-size:11px;color:#475569;display:flex;gap:10px}
+  .odonto{grid-column:1/-1;border-radius:16px;padding:18px 24px;background:rgba(15,23,42,.5);border:1px solid #1e293b}
+  .odonto h3{font-size:12px;color:#94a3b8;font-weight:500;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+  .toothrow{display:flex;justify-content:center;gap:6px;margin-bottom:10px}
+  .tooth{text-align:center;font-size:10px;color:#64748b}
+  .tooth .ic{width:34px;height:44px;border-radius:10px 10px 12px 12px;background:#f8fafc;border:2px solid #cbd5e1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;color:#94a3b8;font-size:9px}
+  .tooth.bad .ic{background:rgba(239,68,68,.75);border-color:#ef4444;color:#fff}
+  .tooth.warn .ic{background:rgba(245,158,11,.75);border-color:#f59e0b;color:#fff}
+  .tooth.resto .ic{background:rgba(167,139,250,.75);border-color:#a78bfa;color:#fff}
+  .legend{display:flex;gap:18px;justify-content:center;font-size:11px;color:#64748b;margin-top:6px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  footer{border-top:1px solid #1e293b;padding:14px;text-align:center;font-size:11px;color:#475569}
+  .banner{grid-column:1/-1;text-align:center;font-size:12px;color:#5eead4;background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.25);border-radius:10px;padding:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🦷</div>
+  <div><h1>Dental AI v2</h1><div class="sub">AI druhý pohľad — nie diagnóza</div></div>
+  <div class="user"><span>lekár</span><div class="av">L</div></div>
+</header>
+<main>
+  <div class="banner">DEMO NÁVRH — finálna vízia rozhrania (Overjet/ Pearl štýl): zaoblené overlaye s pill labele, heatmapa na snímke, rýchla akčná lišta</div>
+
+  <!-- ĽAVÝ STĹPEC: snímka + akcie -->
+  <section>
+    <div class="xray-wrap">
+      <!-- schématický panoramatický RTG -->
+      <svg class="xray" viewBox="0 0 900 430">
+        <rect width="900" height="430" fill="#0a0f1c"/>
+        <rect width="900" height="430" fill="url(#g)"/>
+        <defs>
+          <radialGradient id="g" cx="50%" cy="45%" r="75%">
+            <stop offset="0%" stop-color="#1c2438"/><stop offset="60%" stop-color="#101726"/><stop offset="100%" stop-color="#080d18"/>
+          </radialGradient>
+        </defs>
+        <!-- čeľusť oblúky -->
+        <path d="M120,90 Q450,20 780,90" fill="none" stroke="#2a3páld" stroke-width="0"/>
+        <path d="M110,95 Q450,15 790,95" fill="none" stroke="#39445e" stroke-width="3" opacity=".7"/>
+        <path d="M110,330 Q450,410 790,330" fill="none" stroke="#39445e" stroke-width="3" opacity=".7"/>
+        <!-- horné zuby -->
+        <g fill="#dbe3ee" opacity=".92">
+          <path d="M135,105 q14,34 0,52 q-16,-18 0,-52"/><path d="M170,92 q15,40 0,62 q-17,-22 0,-62"/>
+          <path d="M207,84 q16,44 0,68 q-18,-24 0,-68"/><path d="M245,78 q17,46 0,72 q-19,-26 0,-72"/>
+          <path d="M284,74 q17,48 0,74 q-19,-26 0,-74"/><path d="M323,72 q17,48 0,74 q-19,-26 0,-74"/>
+          <path d="M362,70 q17,50 0,76 q-19,-26 0,-76"/><path d="M401,69 q17,50 0,76 q-19,-26 0,-76"/>
+          <path d="M440,69 q17,50 0,76 q-19,-26 0,-76"/><path d="M479,70 q17,50 0,76 q-19,-26 0,-76"/>
+          <path d="M518,72 q17,48 0,74 q-19,-26 0,-74"/><path d="M557,74 q17,48 0,74 q-19,-26 0,-74"/>
+          <path d="M596,78 q17,46 0,72 q-19,-26 0,-72"/><path d="M635,84 q16,44 0,68 q-18,-24 0,-68"/>
+          <path d="M673,92 q15,40 0,62 q-17,-22 0,-62"/><path d="M708,105 q14,34 0,52 q-16,-18 0,-52"/>
+        </g>
+        <!-- dolné zuby -->
+        <g fill="#cfd8e6" opacity=".9">
+          <path d="M140,320 q14,-30 0,-46 q-15,16 0,46"/><path d="M175,332 q15,-36 0,-56 q-17,20 0,56"/>
+          <path d="M212,340 q16,-40 0,-62 q-18,22 0,62"/><path d="M250,346 q17,-42 0,-66 q-19,24 0,66"/>
+          <path d="M289,350 q17,-44 0,-68 q-19,24 0,68"/><path d="M328,352 q17,-44 0,-68 q-19,24 0,68"/>
+          <path d="M367,354 q17,-44 0,-68 q-19,24 0,68"/><path d="M406,354 q17,-44 0,-68 q-19,24 0,68"/>
+          <path d="M445,354 q17,-44 0,-68 q-19,24 0,68"/><path d="M484,352 q17,-44 0,-68 q-19,24 0,68"/>
+          <path d="M523,350 q17,-44 0,-68 q-19,24 0,68"/><path d="M562,346 q17,-42 0,-66 q-19,24 0,66"/>
+          <path d="M601,340 q16,-40 0,-62 q-18,22 0,62"/><path d="M639,332 q15,-36 0,-56 q-17,20 0,56"/>
+          <path d="M676,320 q14,-30 0,-46 q-15,16 0,46"/>
+        </g>
+        <!-- heatmapa glow na zube 36 -->
+        <ellipse cx="375" cy="330" rx="46" ry="34" fill="#f97316" opacity=".22"/>
+        <ellipse cx="375" cy="330" rx="28" ry="20" fill="#fb923c" opacity=".28"/>
+        <!-- plomba -->
+        <rect x="598" y="332" width="20" height="10" rx="3" fill="#a78bfa" opacity=".8"/>
+      </svg>
+
+      <!-- zaoblené overlay boxy s pill labele -->
+      <div class="bbox" style="left:36%;top:52%;width:9.5%;height:16%;border-color:#ef4444;box-shadow:0 0 16px rgba(239,68,68,.55)">
+        <div class="fill" style="background:#ef4444"></div>
+        <div class="pill" style="background:#ef4444">Kaz 85 % · zub 36</div>
+      </div>
+      <div class="bbox" style="left:19%;top:56%;width:7.5%;height:13%;border-color:#f59e0b;box-shadow:0 0 14px rgba(245,158,11,.5)">
+        <div class="fill" style="background:#f59e0b"></div>
+        <div class="pill" style="background:#f59e0b">Hlboký kaz 78 % · zub 46</div>
+      </div>
+      <div class="bbox" style="left:63%;top:60%;width:7%;height:12%;border-color:#38bdf8;box-shadow:0 0 14px rgba(56,189,248,.45)">
+        <div class="fill" style="background:#38bdf8"></div>
+        <div class="pill" style="background:#38bdf8">Plomba 92 % · zub 45</div>
+      </div>
+      <div class="bbox" style="left:70%;top:16%;width:6.5%;height:14%;border-color:#f59e0b;box-shadow:0 0 14px rgba(245,158,11,.45)">
+        <div class="fill" style="background:#f59e0b"></div>
+        <div class="pill" style="background:#f59e0b">Retinovaný zub 81 % · zub 13</div>
+      </div>
+    </div>
+
+    <!-- prepínače -->
+    <div class="toolbar">
+      <span class="chip">🍳 Standard</span>
+      <span class="chip">🧩 Tiles</span>
+      <span class="chip">⚔️ Ensemble</span>
+      <span class="chip grad on">🌡 Heatmapa na snímke — skryť</span>
+      <span class="chip on">🔥 Grad-CAM panel</span>
+      <span class="chip">citlivosť 0.12</span>
+    </div>
+
+    <!-- akčná lišta pod snímkou -->
+    <div class="actionbar">
+      <span class="who">Zub <b>36</b> · <b>Kaz</b> <span style="color:#64748b">(85 %)</span></span>
+      <button class="btn ok">✓ Súhlasím</button>
+      <button class="btn fix">✎ Opraviť</button>
+      <span class="hint">kliknite na box alebo kartu nálezu na výber</span>
+    </div>
+
+    <div class="toolbar">
+      <span class="chip">📄 PDF report pre pacienta</span>
+      <span class="chip">14 nálezov · 5 812 ms · štandard</span>
+      <span class="chip">Kaz ×6</span>
+      <span class="chip">Plomba ×3</span>
+      <span class="chip">Retinovaný ×2</span>
+    </div>
+  </section>
+
+  <!-- PRAVÝ PANEL: karty nálezov -->
+  <aside>
+    <h2>Nálezy — potvrďte alebo opravte</h2>
+    <div class="card active">
+      <div class="top"><div><div class="name">Kaz</div><div class="en">Caries · zub 36</div></div><span class="sev urgent">Naliehavé</span></div>
+      <div class="bar"><i style="width:85%"></i></div><span class="pct">85 %</span>
+      <div class="btns"><button class="btn ok sm">✓ Súhlasím</button><button class="btn fix sm">✎ Opraviť</button></div>
+    </div>
+    <div class="card">
+      <div class="top"><div><div class="name">Hlboký kaz</div><div class="en">Deep Caries · zub 46</div></div><span class="sev urgent">Naliehavé</span></div>
+      <div class="bar"><i style="width:78%"></i></div><span class="pct">78 %</span>
+      <div class="btns"><button class="btn ok sm">✓ Súhlasím</button><button class="btn fix sm">✎ Opraviť</button></div>
+    </div>
+    <div class="card">
+      <div class="top"><div><div class="name">Plomba</div><div class="en">Filling · zub 45</div></div><span class="sev rest">Restaurácia</span></div>
+      <div class="bar"><i style="width:92%"></i></div><span class="pct">92 %</span>
+      <div class="btns"><button class="btn ok sm">✓ Súhlasím</button><button class="btn fix sm">✎ Opraviť</button></div>
+    </div>
+    <div class="card">
+      <div class="top"><div><div class="name">Retinovaný zub</div><div class="en">Impacted · zub 13</div></div><span class="sev watch">Sledujte</span></div>
+      <div class="bar"><i style="width:81%"></i></div><span class="pct">81 %</span>
+      <div class="btns"><button class="btn ok sm">✓ Súhlasím</button><button class="btn fix sm">✎ Opraviť</button></div>
+    </div>
+    <div class="stats"><span>zhoda AI s lekárom: <b style="color:#5eead4">—</b></span><span>prekontrolovaných: 0</span></div>
+  </section>
+
+  <!-- ODONTOGRAM -->
+  <div class="odonto">
+    <h3>Odontogram — FDI</h3>
+    <div class="toothrow">
+      <div class="tooth"><div class="ic">18</div>18</div><div class="tooth"><div class="ic">17</div>17</div>
+      <div class="tooth"><div class="ic">16</div>16</div><div class="tooth warn"><div class="ic">13</div>13</div>
+      <div class="tooth"><div class="ic">12</div>12</div><div class="tooth"><div class="ic">11</div>11</div>
+      <div class="tooth"><div class="ic">21</div>21</div><div class="tooth"><div class="ic">22</div>22</div>
+      <div class="tooth"><div class="ic">23</div>23</div><div class="tooth"><div class="ic">24</div>24</div>
+      <div class="tooth"><div class="ic">25</div>25</div><div class="tooth"><div class="ic">26</div>26</div>
+      <div class="tooth"><div class="ic">27</div>27</div><div class="tooth"><div class="ic">28</div>28</div>
+    </div>
+    <div class="toothrow">
+      <div class="tooth"><div class="ic">48</div>48</div><div class="tooth"><div class="ic">47</div>47</div>
+      <div class="tooth"><div class="ic">46</div>46</div><div class="tooth bad"><div class="ic">45</div>45</div>
+      <div class="tooth warn"><div class="ic">44</div>44</div><div class="tooth bad"><div class="ic">43</div>43</div>
+      <div class="tooth"><div class="ic">42</div>42</div><div class="tooth"><div class="ic">41</div>41</div>
+      <div class="tooth"><div class="ic">31</div>31</div><div class="tooth"><div class="ic">32</div>32</div>
+      <div class="tooth"><div class="ic">33</div>33</div><div class="tooth"><div class="ic">34</div>34</div>
+      <div class="tooth"><div class="ic">35</div>35</div><div class="tooth"><div class="ic">36</div>36</div>
+      <div class="tooth"><div class="ic">37</div>37</div><div class="tooth"><div class="ic">38</div>38</div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#ef4444"></i>kaz / urgent</span>
+      <span><i style="background:#f59e0b"></i>sledujte</span>
+      <span><i style="background:#a78bfa"></i>restaurácia</span>
+      <span><i style="background:#f8fafc"></i>zdravý</span>
+    </div>
+  </div>
+</main>
+<footer>Dental AI v2 · demo pre súkromné použitie · AI je asistent — klinické rozhodnutie vždy patrí lekárovi</footer>
+</body>
+</html>

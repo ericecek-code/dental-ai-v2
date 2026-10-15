@@ -1,0 +1,12 @@
+# DENTEX — 4 diagnózy (lokálna kópia v starom projekte, len na čítanie)
+path: C:/Users/PC1/Desktop/dental-ai/datasets/dentex
+train: images/train
+val: images/val
+test: images/test
+
+names:
+  0: Impacted
+  1: Caries
+  2: Periapical Lesion
+  3: Deep Caries
+nc: 4

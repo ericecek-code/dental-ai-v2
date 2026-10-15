@@ -1,0 +1,33 @@
+{
+ "sources": [
+  {
+   "comment": "pano-disease (COCO) \u2014 mapa kategorii -> DENTEX ids (null = skip), DOPLNIT po in spekcii",
+   "type": "coco",
+   "prefix": "pano",
+   "json": "C:\\Users\\PC1\\Desktop\\dental-ai\\archive\\kaggle-p0\\pano-disease\\COCO\\COCO\\annotations\\train_coco.json",
+   "images": "C:\\Users\\PC1\\Desktop\\dental-ai\\archive\\kaggle-p0\\pano-disease",
+   "map": {
+    "Caries": 1,
+    "Periapical lesion": 2,
+    "impacted tooth": 0
+   }
+  },
+  {
+   "comment": "bitewing (VOC XML) \u2014 mapa tried -> DENTEX ids, DOPLNIT po in spekcii",
+   "type": "voc",
+   "prefix": "bw",
+   "annotations": "C:\\Users\\PC1\\Desktop\\dental-ai\\archive\\kaggle-p0\\bitewing\\dataset_kaggle\\annotations",
+   "images": "C:\\Users\\PC1\\Desktop\\dental-ai\\archive\\kaggle-p0\\bitewing",
+   "map": {
+    "caries": 1
+   }
+  },
+  {
+   "comment": "pseudo-labely z unlabeled periapical (vytvori pseudolabel.py --mode pseudo)",
+   "type": "yolo",
+   "prefix": "pa_unl",
+   "images": "C:\\Users\\PC1\\Desktop\\dental-ai\\archive\\kaggle-p0\\periapical-unlabeled",
+   "labels": "C:\\Users\\PC1\\Desktop\\dental-ai\\archive\\pseudo_periapical_labels"
+  }
+ ]
+}

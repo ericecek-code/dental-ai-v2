@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    ports:
+      - "7860:7860"
+    # .env musí existovať (skopíruj z .env.example) pred `docker compose up`
+    env_file:
+      - .env
+    volumes:
+      - ./backend/data:/app/backend/data
+    restart: unless-stopped

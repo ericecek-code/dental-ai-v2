@@ -1,0 +1,12 @@
+{
+  "id": "eriksmite/dental-yolov8-training-v5",
+  "title": "Dental YOLOv8 Training v5deepseek",
+  "code_file": "notebook.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": ["eriksmite/mega-dataset-dental"],
+  "kernel_sources": []
+}
